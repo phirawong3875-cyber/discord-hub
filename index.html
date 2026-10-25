@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131c">
+  <title>Discord Hub TH</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #10131c;
+      color: #f4f6ff;
+      font-family: system-ui, sans-serif;
+    }
+    header {
+      padding: 32px 16px;
+      text-align: center;
+      background: linear-gradient(135deg, #202b48, #5865f2);
+    }
+    header h1 { margin: 0 0 8px; font-size: 30px; }
+    header p { margin: 0; color: #e1e5ff; }
+    main { max-width: 950px; margin: auto; padding: 20px 14px; }
+    input, select {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 12px;
+      border: 1px solid #374151;
+      border-radius: 10px;
+      background: #1c2230;
+      color: white;
+      font: inherit;
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .filters button {
+      border: 0;
+      border-radius: 20px;
+      padding: 9px 15px;
+      background: #252d40;
+      color: white;
+      cursor: pointer;
+    }
+    .filters button.active { background: #5865f2; }
+    #count { color: #aab3c8; font-size: 14px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: #1b2130;
+      border: 1px solid #30384b;
+      border-radius: 16px;
+      padding: 17px;
+    }
+    .top { display: flex; gap: 12px; align-items: center; }
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: #303b58;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .card h2 { font-size: 18px; margin: 0 0 5px; }
+    .category { color: #a9b6ff; font-size: 12px; }
+    .desc {
+      color: #b9c1d3;
+      line-height: 1.6;
+      min-height: 48px;
+      overflow-wrap: anywhere;
+    }
+    .join {
+      display: block;
+      padding: 11px;
+      text-align: center;
+      text-decoration: none;
+      background: #5865f2;
+      color: white;
+      font-weight: 700;
+      border-radius: 9px;
+    }
+    .join:hover { background: #4752c4; }
+    .empty { text-align: center; padding: 35px 10px; color: #aab3c8; }
+    footer { text-align: center; padding: 25px; color: #8f99ae; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💬 Discord Hub TH</h1>
+    <p>ศูนย์รวมชุมชน Discord ที่คุณชื่นชอบ</p>
+  </header>
+
+  <main>
+    <input id="search" type="search"
+      placeholder="🔎 ค้นหาชื่อดิสหรือคำอธิบาย...">
+
+    <select id="category" aria-label="เลือกหมวดหมู่">
+      <option value="ทั้งหมด">ทุกหมวดหมู่</option>
+      <option value="Minecraft">Minecraft</option>
+      <option value="Gaming">Gaming</option>
+      <option value="Anime">Anime</option>
+      <option value="AI">AI</option>
+      <option value="อื่นๆ">อื่นๆ</option>
+    </select>
+
+    <div class="filters" id="filters"></div>
+    <p id="count"></p>
+    <section class="grid" id="servers"></section>
+    <div class="empty" id="empty" hidden>ไม่พบเซิร์ฟเวอร์ที่ค้นหา</div>
+  </main>
+
+  <footer>Discord Hub TH · Community Directory</footer>
+
+  <script>
+    // เจ้าของเว็บแก้ไขรายชื่อดิสได้ตรงนี้
+    const servers = [
+      {
+        name: "Yarm Yen",
+        category: "Minecraft",
+        emoji: "🌲",
+        description: "ชุมชน Minecraft เล่นเอาชีวิตรอดกับเพื่อน",
+        invite: "https://discord.gg/fuHYjkMaQZ"
+      },
+      {
+        name: "Gaming Community",
+        category: "Gaming",
+        emoji: "🎮",
+        description: "พื้นที่พูดคุยและหาเพื่อนเล่นเกม",
+        invite: "https://discord.com/"
+      },
+      {
+        name: "Anime Community",
+        category: "Anime",
+        emoji: "🌸",
+        description: "พูดคุยเรื่องอนิเมะและตัวละครที่ชอบ",
+        invite: "https://discord.com/"
+      }
+    ];
+
+    const search = document.getElementById("search");
+    const category = document.getElementById("category");
+    const filters = document.getElementById("filters");
+    const list = document.getElementById("servers");
+    const count = document.getElementById("count");
+    const empty = document.getElementById("empty");
+
+    function makeButton(label) {
+      const button = document.createElement("button");
+      button.textContent = label;
+      button.className = category.value === label ? "active" : "";
+      button.onclick = () => {
+        category.value = label;
+        render();
+      };
+      filters.appendChild(button);
+    }
+
+    function render() {
+      const term = search.value.trim().toLowerCase();
+      const selected = category.value;
+
+      const results = servers.filter(s =>
+        (selected === "ทั้งหมด" || s.category === selected) &&
+        (s.name + " " + s.description + " " + s.category)
+          .toLowerCase().includes(term)
+      );
+
+      list.replaceChildren();
+      filters.replaceChildren();
+
+      ["ทั้งหมด", ...new Set(servers.map(s => s.category))]
+        .forEach(makeButton);
+
+      results.forEach(s => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const top = document.createElement("div");
+        top.className = "top";
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.textContent = s.emoji;
+
+        const info = document.createElement("div");
+        const title = document.createElement("h2");
+        title.textContent = s.name;
+        const cat = document.createElement("span");
+        cat.className = "category";
+        cat.textContent = s.category;
+
+        info.append(title, cat);
+        top.append(avatar, info);
+
+        const desc = document.createElement("p");
+        desc.className = "desc";
+        desc.textContent = s.description;
+
+        const link = document.createElement("a");
+        link.className = "join";
+        link.textContent = "เข้าร่วม Discord ↗";
+        link.href = s.invite;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+
+        card.append(top, desc, link);
+        list.appendChild(card);
+      });
+
+      count.textContent = `พบ ${results.length} เซิร์ฟเวอร์`;
+      empty.hidden = results.length !== 0;
+    }
+
+    search.addEventListener("input", render);
+    category.addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>
