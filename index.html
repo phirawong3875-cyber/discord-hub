@@ -3,226 +3,769 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10131c">
-  <title>Discord Hub TH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0d14">
+
+  <title>Discord Hub TH — รวมชุมชน Discord</title>
+  <meta name="description" content="ค้นหาและเข้าร่วมชุมชน Discord ที่คุณสนใจ รวมเกม อนิเมะ เทคโนโลยี และเพื่อนใหม่ไว้ที่เดียว">
+
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --bg: #0b0d14;
+      --panel: #131722;
+      --panel2: #191e2c;
+      --border: #292f40;
+      --text: #f4f5ff;
+      --muted: #9ba4ba;
+      --primary: #7289ff;
+      --primary2: #5865f2;
+      --green: #48d6a0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      background: #10131c;
-      color: #f4f6ff;
-      font-family: system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at top, #20264a 0%, transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Noto Sans Thai",
+        "Segoe UI", sans-serif;
+      min-height: 100vh;
     }
-    header {
-      padding: 32px 16px;
-      text-align: center;
-      background: linear-gradient(135deg, #202b48, #5865f2);
+
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-    header h1 { margin: 0 0 8px; font-size: 30px; }
-    header p { margin: 0; color: #e1e5ff; }
-    main { max-width: 950px; margin: auto; padding: 20px 14px; }
-    input, select {
-      width: 100%;
-      padding: 13px;
-      margin-bottom: 12px;
-      border: 1px solid #374151;
-      border-radius: 10px;
-      background: #1c2230;
-      color: white;
+
+    button, input, select {
       font: inherit;
     }
-    .filters {
+
+    button, a, input, select {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    /* Navigation */
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(11, 13, 20, .88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .nav-inner {
+      min-height: 68px;
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
     }
-    .filters button {
-      border: 0;
-      border-radius: 20px;
-      padding: 9px 15px;
-      background: #252d40;
-      color: white;
-      cursor: pointer;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 19px;
+      letter-spacing: -.5px;
     }
-    .filters button.active { background: #5865f2; }
-    #count { color: #aab3c8; font-size: 14px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
-    }
-    .card {
-      background: #1b2130;
-      border: 1px solid #30384b;
-      border-radius: 16px;
-      padding: 17px;
-    }
-    .top { display: flex; gap: 12px; align-items: center; }
-    .avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 14px;
-      background: #303b58;
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
       display: grid;
       place-items: center;
-      font-size: 28px;
-      flex-shrink: 0;
+      background: linear-gradient(135deg, #8294ff, #5865f2);
+      border-radius: 13px;
+      font-size: 23px;
+      box-shadow: 0 5px 22px #5865f244;
     }
-    .card h2 { font-size: 18px; margin: 0 0 5px; }
-    .category { color: #a9b6ff; font-size: 12px; }
-    .desc {
-      color: #b9c1d3;
-      line-height: 1.6;
-      min-height: 48px;
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .nav-tag {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Hero */
+
+    .hero {
+      text-align: center;
+      padding: 66px 0 38px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #b8c1ff;
+      background: #7289ff18;
+      border: 1px solid #7289ff44;
+      border-radius: 999px;
+      padding: 7px 13px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 20px 0 12px;
+      font-size: clamp(34px, 7vw, 60px);
+      line-height: 1.15;
+      letter-spacing: -2px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #9eacff, #7289ff, #c3a7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 570px;
+      line-height: 1.8;
+      margin: 0 auto;
+      font-size: 15px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 27px;
+    }
+
+    .stat {
+      min-width: 130px;
+      padding: 13px 18px;
+      background: #ffffff08;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .stat small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Search */
+
+    .search-panel {
+      max-width: 780px;
+      margin: 0 auto 34px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      background: #131722d9;
+      border-radius: 19px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-icon {
+      font-size: 22px;
+      padding-left: 8px;
+    }
+
+    .search-panel input,
+    .search-panel select {
+      color: var(--text);
+      background: transparent;
+      border: 0;
+      outline: none;
+      min-width: 0;
+    }
+
+    .search-panel input {
+      flex: 1;
+      width: 100%;
+      padding: 10px 4px;
+    }
+
+    .search-panel input::placeholder {
+      color: #7f899f;
+    }
+
+    .search-panel select {
+      max-width: 155px;
+      padding: 10px;
+      border-left: 1px solid var(--border);
+    }
+
+    .search-panel option {
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    /* Section */
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 19px;
+    }
+
+    .section-heading h2 {
+      font-size: 23px;
+      margin: 0 0 5px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .result-count {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* Server cards */
+
+    .server-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      padding-bottom: 60px;
+    }
+
+    .server-card {
+      overflow: hidden;
+      min-width: 0;
+      background: linear-gradient(180deg, #171c2a, #11151f);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .server-card:hover {
+      transform: translateY(-4px);
+      border-color: #7289ff99;
+    }
+
+    .banner {
+      height: 112px;
+      position: relative;
+      background:
+        radial-gradient(circle at 80% 10%, #a4b0ff77, transparent 35%),
+        linear-gradient(135deg, #28345e, #35305b, #171d32);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, #131722, transparent 75%);
+    }
+
+    .avatar {
+      position: absolute;
+      z-index: 1;
+      left: 17px;
+      bottom: -23px;
+      width: 66px;
+      height: 66px;
+      object-fit: cover;
+      border-radius: 19px;
+      border: 4px solid #171c2a;
+      background: #292f46;
+    }
+
+    .avatar-fallback {
+      position: absolute;
+      z-index: 1;
+      left: 17px;
+      bottom: -23px;
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      font-size: 32px;
+      border-radius: 19px;
+      border: 4px solid #171c2a;
+      background: linear-gradient(135deg, #7289ff, #4e3e86);
+    }
+
+    .card-content {
+      padding: 31px 17px 17px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+    }
+
+    .server-name {
+      margin: 0;
+      font-size: 17px;
       overflow-wrap: anywhere;
     }
-    .join {
-      display: block;
-      padding: 11px;
-      text-align: center;
-      text-decoration: none;
-      background: #5865f2;
-      color: white;
-      font-weight: 700;
-      border-radius: 9px;
+
+    .category {
+      display: inline-block;
+      color: #bdc6ff;
+      background: #7289ff1a;
+      border: 1px solid #7289ff35;
+      border-radius: 7px;
+      padding: 4px 8px;
+      font-size: 11px;
+      white-space: nowrap;
     }
-    .join:hover { background: #4752c4; }
-    .empty { text-align: center; padding: 35px 10px; color: #aab3c8; }
-    footer { text-align: center; padding: 25px; color: #8f99ae; font-size: 13px; }
+
+    .description {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.75;
+      min-height: 46px;
+      margin: 12px 0 17px;
+      overflow-wrap: anywhere;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .server-label {
+      color: #a9b3c9;
+      font-size: 11px;
+    }
+
+    .join-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--primary2);
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      transition: background .2s;
+    }
+
+    .join-button:hover {
+      background: #7c8cff;
+    }
+
+    .join-button.disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 45px 15px;
+      background: var(--panel);
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+    }
+
+    .empty-state div {
+      font-size: 40px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+    }
+
+    /* Footer */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 0;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    footer strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 850px) {
+      .server-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .container {
+        width: calc(100% - 24px);
+      }
+
+      .nav-inner {
+        min-height: 60px;
+      }
+
+      .brand {
+        font-size: 16px;
+      }
+
+      .nav-tag {
+        font-size: 11px;
+      }
+
+      .hero {
+        padding: 46px 0 28px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1px;
+      }
+
+      .hero p {
+        font-size: 13px;
+      }
+
+      .stat {
+        min-width: 105px;
+        padding: 10px 12px;
+      }
+
+      .search-panel {
+        flex-wrap: wrap;
+        gap: 7px;
+        padding: 9px;
+      }
+
+      .search-icon {
+        padding-left: 5px;
+      }
+
+      .search-panel input {
+        width: calc(100% - 45px);
+        flex: 1;
+      }
+
+      .search-panel select {
+        max-width: none;
+        width: 100%;
+        border-left: 0;
+        border-top: 1px solid var(--border);
+      }
+
+      .server-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .banner {
+        height: 125px;
+      }
+
+      .section-heading h2 {
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>💬 Discord Hub TH</h1>
-    <p>ศูนย์รวมชุมชน Discord ที่คุณชื่นชอบ</p>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <div class="brand-icon">🎮</div>
+        <div>Discord <span>Hub TH</span></div>
+      </a>
+      <div class="nav-tag">ศูนย์รวมชุมชน Discord 🇹🇭</div>
+    </div>
   </header>
 
-  <main>
-    <input id="search" type="search"
-      placeholder="🔎 ค้นหาชื่อดิสหรือคำอธิบาย...">
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">✦ DISCOVER YOUR COMMUNITY</div>
 
-    <select id="category" aria-label="เลือกหมวดหมู่">
-      <option value="ทั้งหมด">ทุกหมวดหมู่</option>
-      <option value="Minecraft">Minecraft</option>
-      <option value="Gaming">Gaming</option>
-      <option value="Anime">Anime</option>
-      <option value="AI">AI</option>
-      <option value="อื่นๆ">อื่นๆ</option>
-    </select>
+      <h1>
+        หาเพื่อนใหม่ใน<br>
+        <span class="gradient-text">Discord Hub TH</span>
+      </h1>
 
-    <div class="filters" id="filters"></div>
-    <p id="count"></p>
-    <section class="grid" id="servers"></section>
-    <div class="empty" id="empty" hidden>ไม่พบเซิร์ฟเวอร์ที่ค้นหา</div>
+      <p>
+        รวมเซิร์ฟเวอร์ Discord ที่น่าสนใจไว้ในที่เดียว
+        ไม่ว่าจะเป็นเกม อนิเมะ เทคโนโลยี หรือชุมชนพูดคุย
+        ค้นหาสิ่งที่ชอบ แล้วไปเจอเพื่อนใหม่กันเลย!
+      </p>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="serverCount">0</strong>
+          <small>เซิร์ฟเวอร์ทั้งหมด</small>
+        </div>
+        <div class="stat">
+          <strong>🇹🇭</strong>
+          <small>ชุมชนที่คุณค้นหาได้</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-panel" aria-label="ค้นหาเซิร์ฟเวอร์">
+      <span class="search-icon">🔎</span>
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="ค้นหาชื่อเซิร์ฟเวอร์หรือคำอธิบาย..."
+        aria-label="ค้นหาเซิร์ฟเวอร์"
+      >
+
+      <select id="categoryFilter" aria-label="เลือกหมวดหมู่">
+        <option value="all">ทุกหมวดหมู่</option>
+        <option value="เกม">🎮 เกม</option>
+        <option value="อนิเมะ">🌸 อนิเมะ</option>
+        <option value="พูดคุย">💬 พูดคุย</option>
+        <option value="เทคโนโลยี">💻 เทคโนโลยี</option>
+        <option value="อื่นๆ">✨ อื่นๆ</option>
+      </select>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2>🌐 สำรวจเซิร์ฟเวอร์</h2>
+          <p>ค้นหาชุมชนที่เหมาะกับคุณ</p>
+        </div>
+        <div class="result-count" id="resultCount">0 รายการ</div>
+      </div>
+
+      <div class="server-grid" id="serverGrid"></div>
+    </section>
   </main>
 
-  <footer>Discord Hub TH · Community Directory</footer>
+  <footer>
+    <div class="container">
+      <strong>Discord Hub TH</strong> — รวมชุมชนไว้ในที่เดียว<br>
+      เว็บนี้เป็นเว็บไซต์รวมลิงก์อิสระ ไม่ใช่เว็บไซต์อย่างเป็นทางการของ Discord
+    </div>
+  </footer>
 
   <script>
-    // เจ้าของเว็บแก้ไขรายชื่อดิสได้ตรงนี้
+    /*
+      =========================================
+      เพิ่มเซิร์ฟเวอร์ใหม่ได้ในรายการ servers ด้านล่าง
+      image = รูปไอคอน
+      banner = รูปแบนเนอร์
+      invite = ลิงก์เชิญ Discord
+      =========================================
+    */
+
     const servers = [
       {
         name: "Yarm Yen",
-        category: "Minecraft",
-        emoji: "🌲",
-        description: "ชุมชน Minecraft เล่นเอาชีวิตรอดกับเพื่อน",
+        category: "เกม",
+        emoji: "🌳",
+        description: "เซิร์ฟเวอร์ Minecraft Survival เล่นกับเพื่อนแบบสบาย ๆ เน้นสร้างโลกและผจญภัยไปด้วยกัน",
+        image: "images/yarm-yen.png",
+        banner: "images/yarm-yen-banner.jpg",
         invite: "https://discord.gg/fuHYjkMaQZ"
       },
+
       {
-        name: "Gaming Community",
-        category: "Gaming",
-        emoji: "🎮",
-        description: "พื้นที่พูดคุยและหาเพื่อนเล่นเกม",
-        invite: "https://discord.com/"
-      },
-      {
-        name: "Anime Community",
-        category: "Anime",
+        name: "ชื่อเซิร์ฟเวอร์ของคุณ",
+        category: "อนิเมะ",
         emoji: "🌸",
-        description: "พูดคุยเรื่องอนิเมะและตัวละครที่ชอบ",
-        invite: "https://discord.com/"
+        description: "ใส่คำอธิบายเซิร์ฟเวอร์ของคุณตรงนี้ แล้วเปลี่ยนชื่อ รูปภาพ และลิงก์เชิญได้เลย",
+        image: "",
+        banner: "",
+        invite: ""
       }
+
+      // คัดลอกข้อมูลหนึ่งชุดด้านบนมาเพิ่มเซิร์ฟเวอร์อื่นได้
     ];
 
-    const search = document.getElementById("search");
-    const category = document.getElementById("category");
-    const filters = document.getElementById("filters");
-    const list = document.getElementById("servers");
-    const count = document.getElementById("count");
-    const empty = document.getElementById("empty");
+    const grid = document.getElementById("serverGrid");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
 
-    function makeButton(label) {
-      const button = document.createElement("button");
-      button.textContent = label;
-      button.className = category.value === label ? "active" : "";
-      button.onclick = () => {
-        category.value = label;
-        render();
+    document.getElementById("serverCount").textContent = servers.length;
+
+    function makeImage(src, className, fallback, alt) {
+      if (!src) {
+        const placeholder = document.createElement("div");
+        placeholder.className = fallback
+          ? "avatar-fallback"
+          : "banner";
+        if (fallback) placeholder.textContent = fallback;
+        return placeholder;
+      }
+
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = alt || "";
+      img.className = className;
+
+      img.onerror = function () {
+        if (fallback) {
+          const placeholder = document.createElement("div");
+          placeholder.className = "avatar-fallback";
+          placeholder.textContent = fallback;
+          img.replaceWith(placeholder);
+        } else {
+          img.remove();
+        }
       };
-      filters.appendChild(button);
+
+      return img;
     }
 
-    function render() {
-      const term = search.value.trim().toLowerCase();
-      const selected = category.value;
+    function renderServers() {
+      const query = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
 
-      const results = servers.filter(s =>
-        (selected === "ทั้งหมด" || s.category === selected) &&
-        (s.name + " " + s.description + " " + s.category)
-          .toLowerCase().includes(term)
-      );
+      const filtered = servers.filter(server => {
+        const matchesText =
+          server.name.toLowerCase().includes(query) ||
+          server.description.toLowerCase().includes(query) ||
+          server.category.toLowerCase().includes(query);
 
-      list.replaceChildren();
-      filters.replaceChildren();
+        const matchesCategory =
+          category === "all" || server.category === category;
 
-      ["ทั้งหมด", ...new Set(servers.map(s => s.category))]
-        .forEach(makeButton);
-
-      results.forEach(s => {
-        const card = document.createElement("article");
-        card.className = "card";
-
-        const top = document.createElement("div");
-        top.className = "top";
-
-        const avatar = document.createElement("div");
-        avatar.className = "avatar";
-        avatar.textContent = s.emoji;
-
-        const info = document.createElement("div");
-        const title = document.createElement("h2");
-        title.textContent = s.name;
-        const cat = document.createElement("span");
-        cat.className = "category";
-        cat.textContent = s.category;
-
-        info.append(title, cat);
-        top.append(avatar, info);
-
-        const desc = document.createElement("p");
-        desc.className = "desc";
-        desc.textContent = s.description;
-
-        const link = document.createElement("a");
-        link.className = "join";
-        link.textContent = "เข้าร่วม Discord ↗";
-        link.href = s.invite;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-
-        card.append(top, desc, link);
-        list.appendChild(card);
+        return matchesText && matchesCategory;
       });
 
-      count.textContent = `พบ ${results.length} เซิร์ฟเวอร์`;
-      empty.hidden = results.length !== 0;
+      grid.replaceChildren();
+      document.getElementById("resultCount").textContent =
+        filtered.length + " รายการ";
+
+      if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+
+        const icon = document.createElement("div");
+        icon.textContent = "🔍";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "ไม่พบเซิร์ฟเวอร์";
+
+        const message = document.createElement("p");
+        message.textContent = "ลองเปลี่ยนคำค้นหาหรือเลือกหมวดหมู่อื่น";
+
+        empty.append(icon, heading, message);
+        grid.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(server => {
+        const card = document.createElement("article");
+        card.className = "server-card";
+
+        const banner = document.createElement("div");
+        banner.className = "banner";
+
+        if (server.banner) {
+          banner.style.backgroundImage =
+            `linear-gradient(0deg, #13172222, transparent), url("${server.banner}")`;
+        }
+
+        const avatar = makeImage(
+          server.image,
+          "avatar",
+          server.emoji,
+          server.name
+        );
+
+        banner.appendChild(avatar);
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const top = document.createElement("div");
+        top.className = "card-top";
+
+        const name = document.createElement("h3");
+        name.className = "server-name";
+        name.textContent = server.name;
+
+        const category = document.createElement("span");
+        category.className = "category";
+        category.textContent = server.category;
+
+        top.append(name, category);
+
+        const description = document.createElement("p");
+        description.className = "description";
+        description.textContent = server.description;
+
+        const footer = document.createElement("div");
+        footer.className = "card-footer";
+
+        const label = document.createElement("span");
+        label.className = "server-label";
+        label.textContent = "✦ Discord Community";
+
+        const join = document.createElement("a");
+        join.className = "join-button";
+
+        if (server.invite) {
+          join.href = server.invite;
+          join.target = "_blank";
+          join.rel = "noopener noreferrer";
+          join.textContent = "เข้าร่วม ↗";
+          join.setAttribute(
+            "aria-label",
+            "เข้าร่วมเซิร์ฟเวอร์ " + server.name
+          );
+        } else {
+          join.href = "#";
+          join.classList.add("disabled");
+          join.textContent = "ยังไม่มีลิงก์";
+          join.setAttribute("aria-disabled", "true");
+          join.addEventListener("click", event => event.preventDefault());
+        }
+
+        footer.append(label, join);
+        content.append(top, description, footer);
+        card.append(banner, content);
+        grid.appendChild(card);
+      });
     }
 
-    search.addEventListener("input", render);
-    category.addEventListener("change", render);
-    render();
+    searchInput.addEventListener("input", renderServers);
+    categoryFilter.addEventListener("change", renderServers);
+
+    renderServers();
   </script>
 </body>
 </html>
